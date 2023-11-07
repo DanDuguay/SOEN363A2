@@ -1,6 +1,7 @@
 import requests
 import json
 
+
 def searchAndReplace(file, searchWord, replaceWord):
     with open(file, 'r', encoding="utf-8") as f:
         fileContents = f.read()
@@ -13,10 +14,23 @@ def searchAndReplace(file, searchWord, replaceWord):
         f.close()
 
 
+def createIdListFromJSON(file):
+    idList = []
+    with open(file, 'r', encoding="utf-8") as f:
+        fileData = json.load(f)
+
+    for e in fileData["about"]["itemListElement"]:
+        idList.append(e["url"][-10:-1])
+
+    return idList
+
+
 def main():
     # api-endpoint
     URL = "https://search.imdbot.workers.dev/"
-    imdbNumber = 68646
+    importIdList = createIdListFromJSON("list.JSON")
+
+    # imdbNumber = 68646
 
     imdbIdList = ["imdb-id"]
     titleList = ["title"]
@@ -25,7 +39,7 @@ def main():
     contentRatingList = ["content rating"]
     genresList = ["genres"]
     actorsList = ["actors"]
-    charactorsList = ["characters"]
+    charactersList = ["characters"]
     directorsList = ["directors"]
     creatorsList = ["creators"]
     releaseYearList = ["release year"]
@@ -37,9 +51,12 @@ def main():
     keywordsList = ["keywords"]
     numberOfReviewsList = ["number of reviews"]
 
-    for i in range(75):
-        imdbNumber = imdbNumber + i
-        imdbId = "tt00" + str(imdbNumber)
+    # for i in range(75):
+    for element in importIdList:
+        # imdbNumber = imdbNumber + i
+        # imdbId = "tt00" + str(imdbNumber)
+        print(element)
+        imdbId = element
         PARAMS = {'tt': imdbId}
         r = requests.get(url=URL, params=PARAMS)
         data = json.loads(json.dumps(r.json(), indent=4))
@@ -88,10 +105,10 @@ def main():
                     appendString2 += el["name"] + ","
 
             actorsList.append(appendString1[:-1])
-            charactorsList.append(appendString2[:-1])
+            charactersList.append(appendString2[:-1])
         except:
             actorsList.append("No actors given")
-            charactorsList.append("No characters given")
+            charactersList.append("No characters given")
 
         try:
             appendString = ""
@@ -176,41 +193,41 @@ def main():
 
     for i in range(len(titleList)):
         f = open("data.txt", "a", encoding="utf-8")
-        result = "\""+imdbIdList[i]+"\""
-        result+= ","
-        result+="\""+titleList[i]+"\""
-        result+=","
-        result+="\""+ descriptionList[i]+"\""
-        result+=","
-        result+="\""+ratingList[i]+"\""
-        result+=","
-        result+="\""+contentRatingList[i]+"\""
-        result+=","
-        result+="\""+str(genresList[i])+"\""
-        result+=","
-        result+="\""+str(actorsList[i])+"\""
-        result+=","
-        result+="\""+str(charactorsList[i])+"\""
-        result+=","
-        result+="\""+str(directorsList[i])+"\""
-        result+=","
-        result+="\""+str(creatorsList[i])+"\""
-        result+=","
-        result+="\""+releaseYearList[i]+"\""
-        result+=","
-        result+="\""+runTimeList[i]+"\""
-        result+=","
-        result+="\""+str(AKAsList[i])+"\""
-        result+=","
-        result+="\""+str(countriesIDList[i])+"\""
-        result+=","
-        result+="\""+str(countriesList[i])+"\""
-        result+=","
-        result+="\""+str(languagesList[i])+"\""
-        result+=","
-        result+="\""+str(keywordsList[i])+"\""
-        result+=","
-        result+="\""+numberOfReviewsList[i]+"\""
+        result = "\"" + imdbIdList[i] + "\""
+        result += ","
+        result += "\"" + titleList[i] + "\""
+        result += ","
+        result += "\"" + descriptionList[i] + "\""
+        result += ","
+        result += "\"" + ratingList[i] + "\""
+        result += ","
+        result += "\"" + contentRatingList[i] + "\""
+        result += ","
+        result += "\"" + str(genresList[i]) + "\""
+        result += ","
+        result += "\"" + str(actorsList[i]) + "\""
+        result += ","
+        result += "\"" + str(charactersList[i]) + "\""
+        result += ","
+        result += "\"" + str(directorsList[i]) + "\""
+        result += ","
+        result += "\"" + str(creatorsList[i]) + "\""
+        result += ","
+        result += "\"" + releaseYearList[i] + "\""
+        result += ","
+        result += "\"" + runTimeList[i] + "\""
+        result += ","
+        result += "\"" + str(AKAsList[i]) + "\""
+        result += ","
+        result += "\"" + str(countriesIDList[i]) + "\""
+        result += ","
+        result += "\"" + str(countriesList[i]) + "\""
+        result += ","
+        result += "\"" + str(languagesList[i]) + "\""
+        result += ","
+        result += "\"" + str(keywordsList[i]) + "\""
+        result += ","
+        result += "\"" + numberOfReviewsList[i] + "\""
 
         f.write(result + "\n")
         f.close()
@@ -220,8 +237,6 @@ def main():
     searchAndReplace("data.txt", "&amp;", "&")
 
 
-
-
-
 if __name__ == "__main__":
     main()
+
